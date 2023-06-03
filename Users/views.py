@@ -75,3 +75,7 @@ class Signup(TemplateView):
         msg = config.SIGNUP_SUCCESS_MESSAGE
         return render(request, config.LOGIN_PAGE, context={'msg': msg})
 
+
+def logout(request: WSGIRequest) -> ty.Any:
+    """Logs out the user and redirects to Login page"""
+    return render(request, 'Users/login.html')
