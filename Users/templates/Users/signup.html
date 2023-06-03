@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoList Login</title>
+</head>
+<body>
+    <h1 style="text-align: center;">Signup for ToDoList</h1>
+
+    <div>
+        <form method="POST" action="">
+            <div>
+                <label for="fname">First Name:</label>
+                <input type="text" id="fname" name="fname">
+            </div>
+            <br/>
+            <div>
+                <label for="lname">Last Name:</label>
+                <input type="text" id="lname" name="lname">
+            </div>
+            <br/>
+            <div>
+                <label for="username">Email:</label>
+                <input type="text" id="email" name="email">
+            </div>
+            <br/>
+            <div>
+                  <label for="password">Password:</label>
+                  <input type="password" id="password" name="password">
+            </div>
+            <br/>
+            <div>
+                <label for="conf_password">Confirm Password:</label>
+                <input type="password" id="conf_password" name="conf_password">
+            </div>
+            <br/>
+            {% csrf_token %} {{form.as_p}}
+            <input class="button" type="submit" value="Signup" />
+        </form>
+        <p>Already have an account? <a href="login">Login</a>
+        </p>
+    </div>    
+</body>
+</html>
