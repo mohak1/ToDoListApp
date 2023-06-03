@@ -9,6 +9,12 @@
 <body>
     <h1 style="text-align: center;">Login to ToDoList</h1>
 
+    {% if msg %}
+        <div>
+            <h3>{{ msg }}</h3>
+        </div>
+    {% endif %}
+
     <div>
         <form method="POST" action="">
             <div>
@@ -27,6 +33,6 @@
         <p>Don't have an account ?
             <a href="signup">Signup</a>
         </p>
-    </div>    
+    </div>
 </body>
 </html>
