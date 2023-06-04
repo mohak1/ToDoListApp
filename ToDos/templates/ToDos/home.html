@@ -9,7 +9,10 @@
 <body>
     <h4>
         <div class='navbar'>
-            <a id='Login' href='logout'>Logout</a> |
+            {% if msg %}
+                {{ msg }} |
+            {% endif %}
+            <a id='Login' href='/users/logout'>Logout</a> |
         </div>
     </h4>
     <h1 style="text-align: center;">Welcome to ToDoList</h1>
