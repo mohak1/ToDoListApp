@@ -5,3 +5,7 @@ class UnexpectedLengthError(Exception):
 class InvalidRequestParamsError(Exception):
     """Raised when the request does not contain valid parameters"""
     pass
+
+class NotFoundInDBError(Exception):
+    """Raised when a database qurey returns no matches"""
+    pass
