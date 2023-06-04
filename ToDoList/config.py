@@ -8,6 +8,7 @@ MAX_TASK_VALUE_LENGTH = 256
 
 SIGNUP_PAGE = 'Users/signup.html'
 LOGIN_PAGE = 'Users/login.html'
+HOME_PAGE = 'ToDos/home.html'
 
 LOGGING_LEVEL = 'INFO'
 SIGNUP_SUCCESS_MESSAGE = 'Signup successful! Please login.'
