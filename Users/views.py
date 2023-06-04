@@ -6,13 +6,14 @@ import typing as ty
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.utils import IntegrityError
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 
 from ToDoList import config
 from ToDoList.helpers import custom_exceptions as ce
 from ToDoList.helpers import db_operations as db_op
 from ToDoList.helpers import logger, validator
+from ToDoList.helpers import auth_operations as auth_op
 
 # pylint: disable=unused-argument
 
@@ -29,9 +30,20 @@ class Login(TemplateView):
 
     def post(self, request: WSGIRequest, *args, **kwargs) -> ty.Any:
         """Authenticates the login request"""
-        # TODO: move the home.html to ToDos app and make it display lists
-        return render(request, 'Users/home.html')
+        try:
+            validator.check_required_params(
+                params=request.POST,
+                required=['Email','Password'])
+        except ce.InvalidRequestParamsError as err:
+            logger.log.error('Error: %s', str(err))
+            return render(request, config.LOGIN_PAGE, context={'msg': str(err)})
 
+        try:
+            auth_op.authenticate_login(request)
+        except ce.NotFoundInDBError as err:
+            return render(request, config.LOGIN_PAGE, context={'msg': str(err)})
+
+        return redirect('/todos/home')
 
 class Signup(TemplateView):
     """Contains methods that handle signup requests"""
@@ -77,4 +89,5 @@ class Signup(TemplateView):
 
 def logout(request: WSGIRequest) -> ty.Any:
     """Logs out the user and redirects to Login page"""
-    return render(request, 'Users/login.html')
+    request.session.pop('user', None)
+    return redirect('/users/login')
