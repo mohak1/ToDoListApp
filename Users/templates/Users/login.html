@@ -18,13 +18,13 @@
     <div>
         <form method="POST" action="">
             <div>
-                <label for="email">Email ID:</label>
-                <input type="text" id="email" name="email">
+                <label for="Email">Email ID:</label>
+                <input type="text" id="Email" name="Email">
             </div>
             <br/>
             <div>
-                  <label for="password">Password:</label>
-                  <input type="password" id="password" name="password">
+                  <label for="Password">Password:</label>
+                  <input type="password" id="Password" name="Password">
             </div>
             <br/>
             {% csrf_token %} {{form.as_p}}
