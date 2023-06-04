@@ -1,5 +1,4 @@
 from django.test import Client, TestCase
-from unittest.mock import patch
 from ToDoList import config
 from ToDoList.helpers import db_operations as db_op
 from ToDoList.helpers import auth_operations as auth_op
