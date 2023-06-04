@@ -53,7 +53,7 @@ class SignupTestCase(TestCase):
         # verify that email and password exist in db
         password_hash = auth_op.get_hash(data['Password'])
         db_op.get_user_from_login_cred(data['Email'], password_hash)
-        self.assertTemplateUsed(response, config.LOGIN_PAGE)
+        self.assertTemplateUsed(response, config.SIGNUP_PAGE)
 
     def test_post_with_missing_params(self):
         data = {
