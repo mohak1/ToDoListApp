@@ -8,6 +8,12 @@ from ToDoList import config
 from ToDoList.helpers import custom_exceptions as ce
 
 
+def check_signup_params_length(params: QueryDict) -> None:
+    check_name_length(params.get('First Name'))
+    check_name_length(params.get('Last Name'))
+    check_email_length(params.get('Email'))
+    check_password_length(params.get('Password'))
+
 def check_name_length(name: str):
     if len(name) < 1:
         raise ce.UnexpectedLengthError('Name value cannot be empty')

@@ -4,12 +4,14 @@ URLs and return a response"""
 import typing as ty
 
 from django.core.handlers.wsgi import WSGIRequest
+from django.db.utils import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from ToDoList import config
 from ToDoList.helpers import custom_exceptions as ce
+from ToDoList.helpers import db_operations as db_op
 from ToDoList.helpers import logger, validator
 
 # pylint: disable=unused-argument
@@ -45,32 +47,29 @@ class Signup(TemplateView):
             validator.check_required_params(
                 params=request.POST,
                 required=['First Name', 'Last Name', 'Email',
-                          'Password', 'Confirm Password']
-            )
+                          'Password', 'Confirm Password'])
         except ce.InvalidRequestParamsError as err:
-            logger.log.error('Error: %s', str(err), exc_info=True)
+            logger.log.error('Error: %s', str(err))
             return render(request, config.SIGNUP_PAGE, context={'msg': str(err)})
 
-        f_name = request.POST.get('First Name')
-        l_name = request.POST.get('Last Name')
-        email = request.POST.get('Email')
-        password = request.POST.get('Password')
-        c_password = request.POST.get('Confirm Password')
-
-        if password != c_password:
+        if request.POST.get('Password') != request.POST.get('Confirm Password'):
             msg = '`Password` and `Confirm Password` values are not same'
             return render(request, config.SIGNUP_PAGE, context={'msg': msg})
 
         try:
-            validator.check_name_length(f_name)
-            validator.check_name_length(l_name)
-            validator.check_email_length(email)
-            validator.check_password_length(password)
+            validator.check_signup_params_length(request.POST)
         except ce.UnexpectedLengthError as err:
-            logger.log.error('Error: %s', str(err), exc_info=True)
+            logger.log.error('Error: %s', str(err), exc_info=False)
+            logger.log.debug('Error: %s', str(err), exc_info=True)
             return render(request, config.SIGNUP_PAGE, context={'msg': str(err)})
 
-        # TODO: Create a new user
+        try:
+            db_op.create_new_user(request.POST)
+        except IntegrityError as err:
+            msg = f'An account already exists with {request.POST.get("Email")}'
+            logger.log.debug('Error: %s', str(err), exc_info=True)
+            logger.log.error('Error: %s', str(msg), exc_info=False)
+            return render(request, config.SIGNUP_PAGE, context={'msg': str(msg)})
 
         msg = config.SIGNUP_SUCCESS_MESSAGE
         return render(request, config.LOGIN_PAGE, context={'msg': msg})
