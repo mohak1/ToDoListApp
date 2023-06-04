@@ -12,3 +12,7 @@ SIGNUP_SUCCESS_MESSAGE = 'Signup successful! Please login.'
 LOGIN_FAIL_MESSAGE = 'Email or Password is incorrect. Please try again.'
 
 SALT = '}g\x93\xd9~k\xee\xf3'
+
+HOME_REDIRECT_URL = '/todos/home'
+LOGIN_REDIRECT_URL = '/users/login'
+SIGNUP_REDIRECT_URL = '/users/signup'
