@@ -47,6 +47,20 @@ def check_email_length(email: str) -> None:
             f'`{config.MAX_EMAIL_LENGTH}` characters'
         )
 
+def check_todo_list_name_length(name: str) -> None:
+    """
+    Verifies that the name length of ToDo List is longer than 0 and less
+    than maximum allowed length
+    Raises `ce.UnexpectedLengthError` if length is out of expected range
+    """
+    if len(name) < 1:
+        raise ce.UnexpectedLengthError('ToDo List Name cannot be empty')
+    if len(name) > config.MAX_LIST_NAME_LENGTH:
+        raise ce.UnexpectedLengthError(
+            'ToDo List Name length should be less than '
+            f'`{config.MAX_LIST_NAME_LENGTH}` characters'
+        )
+
 def check_password_length(passw: str) -> None:
     """
     Verifies that password length is greater than 0 and less than
