@@ -12,9 +12,58 @@
             {% if msg %}
                 {{ msg }} |
             {% endif %}
-            <a id='Login' href='/users/logout'>Logout</a> |
+            <a href='/users/logout'>Logout</a> |
         </div>
     </h4>
     <h1 style="text-align: center;">Welcome to ToDoList</h1>
+    <form method="POST" action="/todos/create_todo_list">
+        <label for="List Name">Create new list:</label>
+        <input type="text" name="List Name">
+        {% csrf_token %} {{form.as_p}}
+        <input class="button" type="submit" value="Create" />
+    </form>
+    <h4>
+        {% if err %}
+            {{ err }}
+        {% endif %}
+    </h4>
+    <br>
+    <h3>Your ToDo Lists:</h3>
+    <table>
+        <tr>
+            <th>List Name</th>
+            <th>Update List Name</th>
+            <th>Delete List</th>
+            <th>View Tasks</th>
+        </tr>
+        {% for ele in todos %}
+            <tr>
+                <form method="POST" action="/todos/update_todo_list">
+                    <td>
+                        <input type="text" name="New Name" value={{ ele.list_name }}>
+                        <input type="text" name="id" type="hidden" style="display:none;" value={{ ele.id }}>
+                    </td>
+                    <td>
+                        {% csrf_token %} {{form.as_p}}
+                        <input class="button" type="submit" value="Update List Name" />
+                    </td>
+                </form>
+                <td>
+                    <form method="POST" action="/todos/delete_todo_list">
+                        <input type="text" name="id" type="hidden" style="display:none;" value={{ ele.id }}>
+                        {% csrf_token %} {{form.as_p}}
+                        <input class="button" type="submit" value="Delete List" />
+                    </form>
+                </td>
+                <td>
+                    <form method="POST" action="/todos/get_tasks">
+                        <input type="text" name="id" type="hidden" style="display:none;" value={{ ele.id }}>
+                        {% csrf_token %} {{form.as_p}}
+                        <input class="button" type="submit" value="View Tasks" />
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
