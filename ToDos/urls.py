@@ -3,4 +3,5 @@ from ToDos import views
 
 urlpatterns = [
     path('health', views.health_check),
+    path('home', views.home_page),
 ]
