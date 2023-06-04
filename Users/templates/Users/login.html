@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoList Login</title>
+</head>
+<body>
+    <h1 style="text-align: center;">Login to ToDoList</h1>
+
+    {% if msg %}
+        <div>
+            <h3>{{ msg }}</h3>
+        </div>
+    {% endif %}
+
+    <div>
+        <form method="POST" action="">
+            <div>
+                <label for="Email">Email ID:</label>
+                <input type="text" id="Email" name="Email">
+            </div>
+            <br/>
+            <div>
+                  <label for="Password">Password:</label>
+                  <input type="password" id="Password" name="Password">
+            </div>
+            <br/>
+            {% csrf_token %} {{form.as_p}}
+            <input class="button" type="submit" value="Login" />
+        </form>
+        <p>Don't have an account ?
+            <a href="signup">Signup</a>
+        </p>
+    </div>
+</body>
+</html>
