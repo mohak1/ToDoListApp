@@ -9,5 +9,6 @@ LOGIN_PAGE = 'Users/login.html'
 
 LOGGING_LEVEL = 'INFO'
 SIGNUP_SUCCESS_MESSAGE = 'Signup successful! Please login.'
+LOGIN_FAIL_MESSAGE = 'Email or Password is incorrect. Please try again.'
 
 SALT = '}g\x93\xd9~k\xee\xf3'
