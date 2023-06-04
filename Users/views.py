@@ -26,7 +26,7 @@ class Login(TemplateView):
 
     def get(self, request: WSGIRequest, *args, **kwargs) -> ty.Any:
         """Returns Login page template"""
-        return render(request, 'Users/login.html')
+        return render(request, config.LOGIN_PAGE)
 
     def post(self, request: WSGIRequest, *args, **kwargs) -> ty.Any:
         """Authenticates the login request"""
@@ -43,18 +43,17 @@ class Login(TemplateView):
         except ce.NotFoundInDBError as err:
             return render(request, config.LOGIN_PAGE, context={'msg': str(err)})
 
-        return redirect('/todos/home')
+        return redirect(config.HOME_REDIRECT_URL)
 
 class Signup(TemplateView):
     """Contains methods that handle signup requests"""
 
     def get(self, request: WSGIRequest, *args, **kwargs) -> ty.Any:
         """Returns Signup page template"""
-        return render(request, 'Users/signup.html')
+        return render(request, config.SIGNUP_PAGE)
 
     def post(self, request: WSGIRequest, *args, **kwargs) -> ty.Any:
         """Performs user signup and redirects to Login page"""
-
         try:
             validator.check_required_params(
                 params=request.POST,
@@ -90,4 +89,4 @@ class Signup(TemplateView):
 def logout(request: WSGIRequest) -> ty.Any:
     """Logs out the user and redirects to Login page"""
     request.session.pop('user', None)
-    return redirect('/users/login')
+    return redirect(config.LOGIN_REDIRECT_URL)
