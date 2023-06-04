@@ -7,10 +7,17 @@ from ToDoList.helpers import db_operations as db_op
 from ToDoList.helpers import logger
 
 
-def get_hash(password):
+def get_hash(password: str) -> str:
+    """Returns a hashed string of the input string"""
     return make_password(password, salt=config.SALT)
 
 def authenticate_login(request: WSGIRequest) -> None:
+    """
+    Checks if the `Email` and `Password` in the request exist in the db
+    and sets the user details in the request session
+    Raises `ce.NotFoundInDBError` if no entries are found in the db
+    that match the provided email and hashed password
+    """
     email = request.POST.get('Email')
     passw = get_hash(request.POST.get('Password'))
     try:
