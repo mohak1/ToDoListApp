@@ -77,13 +77,13 @@ class Signup(TemplateView):
         try:
             db_op.create_new_user(request.POST)
         except IntegrityError as err:
-            msg = f'An account already exists with {request.POST.get("Email")}'
+            msg = f'Signup failed: An account already exists with this email'
             logger.log.debug('Error: %s', str(err), exc_info=True)
             logger.log.error('Error: %s', str(msg), exc_info=False)
             return render(request, config.SIGNUP_PAGE, context={'msg': str(msg)})
 
         msg = config.SIGNUP_SUCCESS_MESSAGE
-        return render(request, config.LOGIN_PAGE, context={'msg': msg})
+        return render(request, config.SIGNUP_PAGE, context={'msg': msg})
 
 
 def logout(request: WSGIRequest) -> ty.Any:
