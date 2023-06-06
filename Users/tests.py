@@ -47,7 +47,7 @@ class SignupTestCase(TestCase):
     def test_post_with_valid_data(self):
         data = {
             'FirstName': 'fname', 'LastName': 'lname', 'Email': 'email',
-            'Password': 'password', 'Confirm Password': 'password'
+            'Password': 'password', 'ConfirmPassword': 'password'
         }
         response = self.client.post(config.SIGNUP_REDIRECT_URL, data=data)
         # verify that email and password exist in db
