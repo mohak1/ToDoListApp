@@ -24,29 +24,34 @@ def health_check(request: WSGIRequest) -> HttpResponse:
 
 
 @require_http_methods(['GET'])
-@decorators.log_method
 @decorators.auth_required
-def home_page(request: WSGIRequest) -> HttpResponse:
+@decorators.log_method
+def todo_list_page(request: WSGIRequest) -> HttpResponse:
     msg = f'Logged in as {request.session["user"]["email"]}'
     todos = db_op.get_todo_lists_for_user(request.session.get('user')['id'])
-    return render(request, 'ToDos/home.html',
+    return render(request, config.TODO_LISTS_PAGE,
                   context={'msg': msg, 'todos': todos})
 
+def tasks_page(request: WSGIRequest, todo_list_id: str) -> HttpResponse:
+    msg = f'Logged in as {request.session["user"]["email"]}'
+    tasks = db_op.get_tasks_of_todo_list(todo_list_id)
+    return render(request, config.TASKS_PAGE,
+                  context={'msg': msg, 'list_id': todo_list_id, 'tasks': tasks})
 
 @require_http_methods(['POST'])
-@decorators.log_method
 @decorators.auth_required
-def create_todo_list(request: WSGIRequest, *args, **kwargs) -> ty.Any:
+@decorators.log_method
+def create_todo_list(request: WSGIRequest) -> ty.Any:
     """Adds a new ToDo List for the user"""
     try:
         validator.check_required_params(
-            params=request.POST, required=['List Name']
+            params=request.POST, required=['ListName']
         )
     except ce.InvalidRequestParamsError as err:
         logger.log.error('Error: %s', str(err))
         return render(request, config.HOME_PAGE, context={'err': str(err)})
 
-    list_name = request.POST.get('List Name')
+    list_name = request.POST.get('ListName')
     user_id = request.session.get('user')['id']
 
     try:
@@ -58,45 +63,43 @@ def create_todo_list(request: WSGIRequest, *args, **kwargs) -> ty.Any:
 
     db_op.create_new_todo_list(user_id, list_name)
 
-    return redirect(config.HOME_REDIRECT_URL)
+    return redirect(config.TODO_LISTS_REDIRECT_URL)
 
 
 @require_http_methods(['POST'])
-@decorators.log_method
 @decorators.auth_required
-def update_todo_list(request: WSGIRequest, *args, **kwargs) -> ty.Any:
+@decorators.log_method
+def update_todo_list(request: WSGIRequest) -> ty.Any:
     """Updates the selected ToDo List for the user"""
     try:
         validator.check_required_params(
-            params=request.POST, required=['New Name', 'id']
+            params=request.POST, required=['NewName', 'ToDoListID']
         )
     except ce.InvalidRequestParamsError as err:
         logger.log.error('Error: %s', str(err))
         return render(request, config.HOME_PAGE, context={'err': str(err)})
 
-    new_name = request.POST.get('New Name')
-    list_id = request.POST.get('id')
-    user_id = request.session.get('user')['id']
-    db_op.update_todo_list_name(user_id, list_id, new_name)
-    return redirect(config.HOME_REDIRECT_URL)
+    new_name = request.POST.get('NewName')
+    todo_list_id = request.POST.get('ToDoListID')
+    db_op.update_todo_list_name(todo_list_id, new_name)
+    return redirect(config.TODO_LISTS_REDIRECT_URL)
 
 
 @require_http_methods(['POST'])
-@decorators.log_method
 @decorators.auth_required
-def delete_todo_list(request: WSGIRequest, *args, **kwargs) -> ty.Any:
+@decorators.log_method
+def delete_todo_list(request: WSGIRequest) -> ty.Any:
     """Deletes the selected ToDo List for the user"""
     try:
-        validator.check_required_params(params=request.POST, required=['id'])
+        validator.check_required_params(params=request.POST, required=['ToDoListID'])
     except ce.InvalidRequestParamsError as err:
         logger.log.error('Error: %s', str(err))
         return render(request, config.HOME_PAGE, context={'err': str(err)})
 
-    list_id = request.POST.get('id')
-    user_id = request.session.get('user')['id']
-    db_op.delete_todo_list_object(user_id, list_id)
+    todo_list_id = request.POST.get('ToDoListID')
+    db_op.delete_todo_list_object(todo_list_id)
 
-    return redirect(config.HOME_REDIRECT_URL)
+    return redirect(config.TODO_LISTS_REDIRECT_URL)
 
 
 @require_http_methods(['GET'])
