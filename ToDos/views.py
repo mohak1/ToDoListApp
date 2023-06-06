@@ -99,23 +99,93 @@ def delete_todo_list(request: WSGIRequest, *args, **kwargs) -> ty.Any:
     return redirect(config.HOME_REDIRECT_URL)
 
 
-@method_decorator(decorators.auth_required, name='dispatch')
-@method_decorator(decorators.log_method, name='dispatch')
-class Task(TemplateView):
-    """Contains methods that handle task requests"""
+@require_http_methods(['GET'])
+@decorators.auth_required
+@decorators.log_method
+def get_tasks(request: WSGIRequest, todo_list_id: str) -> ty.Any:
+    """Returns all the Tasks of the specified ToDo List"""
 
-    def get(self, request: WSGIRequest, *args, **kwargs) -> ty.Any:
-        """Returns all the Tasks of the specified ToDo List"""
-        ...
+    list_name = 'Name Of The List'
+    tasks = db_op.get_tasks_of_todo_list(todo_list_id)
+    msg = f'Logged in as {request.session["user"]["email"]}'
+    return render(request, config.TASKS_PAGE,
+                  context={
+                      'msg': msg, 'list_name': list_name,
+                      'tasks': tasks, 'list_id': todo_list_id
+                  })
 
-    def post(self, request: WSGIRequest, *args, **kwargs) -> ty.Any:
-        """Adds a new Task to the specified ToDo List"""
-        ...
+@require_http_methods(['POST'])
+@decorators.auth_required
+@decorators.log_method
+def create_task(request: WSGIRequest) -> ty.Any:
+    """Adds a new Task to the specified ToDo List"""
+    try:
+        validator.check_required_params(
+            params=request.POST, required=['ToDoListID', 'TaskValue']
+        )
+    except ce.InvalidRequestParamsError as err:
+        logger.log.error('Error: %s', str(err))
+        return render(request, config.TASKS_PAGE, context={'err': str(err)})
 
-    def put(self, request: WSGIRequest, *args, **kwargs) -> ty.Any:
-        """Updates the selected Task in the ToDo List"""
-        ...
+    todo_list_id = request.POST.get('ToDoListID')
+    task_val = request.POST.get('TaskValue')
 
-    def delete(self, request: WSGIRequest, *args, **kwargs) -> ty.Any:
-        """Deletes the selected Task from the ToDo List"""
-        ...
+    db_op.create_new_task(todo_list_id, task_val)
+
+    return redirect(config.TASKS_REDIRECT_URL+'/'+todo_list_id)
+
+@require_http_methods(['POST'])
+@decorators.auth_required
+@decorators.log_method
+def update_task(request: WSGIRequest) -> ty.Any:
+    """Updates the selected Task in the ToDo List"""
+    try:
+        validator.check_required_params(
+            params=request.POST, required=['NewTaskValue', 'ToDoListID', 'TaskID']
+        )
+    except ce.InvalidRequestParamsError as err:
+        logger.log.error('Error: %s', str(err))
+        return render(request, config.HOME_PAGE, context={'err': str(err)})
+
+    new_task_val = request.POST.get('NewTaskValue')
+    todo_list_id = request.POST.get('ToDoListID')
+    task_id = request.POST.get('TaskID')
+    db_op.update_task_value(todo_list_id, task_id, new_task_val)
+    return redirect(config.TASKS_REDIRECT_URL+'/'+todo_list_id)
+
+@require_http_methods(['POST'])
+@decorators.auth_required
+@decorators.log_method
+def delete_task(request: WSGIRequest) -> ty.Any:
+    """Deletes the selected Task from the ToDo List"""
+    try:
+        validator.check_required_params(
+            params=request.POST, required=['ToDoListID', 'TaskID']
+        )
+    except ce.InvalidRequestParamsError as err:
+        logger.log.error('Error: %s', str(err))
+        return render(request, config.HOME_PAGE, context={'err': str(err)})
+
+    todo_list_id = request.POST.get('ToDoListID')
+    task_id = request.POST.get('TaskID')
+    db_op.delete_task_object(todo_list_id, task_id)
+    return redirect(config.TASKS_REDIRECT_URL+'/'+todo_list_id)
+
+@require_http_methods(['POST'])
+@decorators.auth_required
+@decorators.log_method
+def toggle_task_status(request: WSGIRequest) -> ty.Any:
+    """Toggles the value of `completed` field of the selected Task in
+    the ToDo List"""
+    try:
+        validator.check_required_params(
+            params=request.POST, required=['ToDoListID', 'TaskID']
+        )
+    except ce.InvalidRequestParamsError as err:
+        logger.log.error('Error: %s', str(err))
+        return render(request, config.HOME_PAGE, context={'err': str(err)})
+
+    todo_list_id = request.POST.get('ToDoListID')
+    task_id = request.POST.get('TaskID')
+    db_op.toggle_completed_value(todo_list_id, task_id)
+    return redirect(config.TASKS_REDIRECT_URL+'/'+todo_list_id)
