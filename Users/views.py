@@ -43,7 +43,7 @@ class Login(TemplateView):
         except ce.NotFoundInDBError as err:
             return render(request, config.LOGIN_PAGE, context={'msg': str(err)})
 
-        return redirect(config.HOME_REDIRECT_URL)
+        return redirect(config.TODO_LISTS_REDIRECT_URL)
 
 class Signup(TemplateView):
     """Contains methods that handle signup requests"""
