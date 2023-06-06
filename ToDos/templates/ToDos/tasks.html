@@ -23,7 +23,7 @@
     {% endif %}
     <br>
     <form method="POST" action="/todos/create_task">
-        <label for="List Name">Add new task to this ToDo List:</label>
+        <label for="ListName">Add new task to this ToDo List:</label>
         <input type="text" name="ToDoListID" type="hidden" style="display:none;" value={{ list_id }}>
         <input type="text" name="TaskValue">
         {% csrf_token %} {{form.as_p}}

@@ -57,13 +57,13 @@ class Signup(TemplateView):
         try:
             validator.check_required_params(
                 params=request.POST,
-                required=['First Name', 'Last Name', 'Email',
-                          'Password', 'Confirm Password'])
+                required=['FirstName', 'LastName', 'Email',
+                          'Password', 'ConfirmPassword'])
         except ce.InvalidRequestParamsError as err:
             logger.log.error('Error: %s', str(err))
             return render(request, config.SIGNUP_PAGE, context={'msg': str(err)})
 
-        if request.POST.get('Password') != request.POST.get('Confirm Password'):
+        if request.POST.get('Password') != request.POST.get('ConfirmPassword'):
             msg = '`Password` and `Confirm Password` values are not same'
             return render(request, config.SIGNUP_PAGE, context={'msg': msg})
 

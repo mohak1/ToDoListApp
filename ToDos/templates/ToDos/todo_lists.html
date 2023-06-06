@@ -18,7 +18,7 @@
     <h1 style="text-align: center;">Welcome to ToDo List App</h1>
     <br>
     <form method="POST" action="/todos/create_todo_list">
-        <label for="List Name">Create new list:</label>
+        <label for="ListName">Create new list:</label>
         <input type="text" name="ListName">
         {% csrf_token %} {{form.as_p}}
         <input class="button" type="submit" value="Create" />

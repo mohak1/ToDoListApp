@@ -10,14 +10,14 @@ class TestValidator(unittest.TestCase):
 
     def test_check_signup_params_length_no_error(self):
         data = {
-            'First Name': 'fname', 'Last Name': 'lname',
+            'FirstName': 'fname', 'LastName': 'lname',
             'Email': 'email', 'Password': 'password'
         }
         validator.check_signup_params_length(data)
 
     def test_check_signup_params_length_error_raised(self):
         data = {
-            'First Name': '', 'Last Name': 'lname',
+            'FirstName': '', 'LastName': 'lname',
             'Email': 'email', 'Password': 'password'
         }
         with self.assertRaises(ce.UnexpectedLengthError):
@@ -45,12 +45,12 @@ class TestValidator(unittest.TestCase):
             validator.check_password_length('')
 
     def test_check_required_params_no_error(self):
-        required = ['First Name', 'Last Name']
-        params = data = {'First Name': 'a', 'Last Name': 'b'}
+        required = ['FirstName', 'LastName']
+        params = data = {'FirstName': 'a', 'LastName': 'b'}
         validator.check_required_params(params, required)
 
     def test_check_required_params_error_raised(self):
-        required = ['First Name', 'Last Name', 'Email', 'Password']
-        params = data = {'First Name': 'a', 'Last Name': 'b'}
+        required = ['FirstName', 'LastName', 'Email', 'Password']
+        params = data = {'FirstName': 'a', 'LastName': 'b'}
         with self.assertRaises(ce.InvalidRequestParamsError):
             validator.check_required_params(params, required)

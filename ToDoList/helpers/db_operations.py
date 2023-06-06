@@ -13,8 +13,8 @@ def create_new_user(params: QueryDict) -> None:
     Raises `IntegrityError` if Email already exists
     """
     obj = Userdb()
-    obj.first_name = params.get('First Name')
-    obj.last_name = params.get('Last Name')
+    obj.first_name = params.get('FirstName')
+    obj.last_name = params.get('LastName')
     obj.email = params.get('Email')
     obj.password = auth_op.get_hash(params.get('Password'))
     obj.save()
