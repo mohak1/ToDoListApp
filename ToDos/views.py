@@ -22,7 +22,6 @@ def health_check(request: WSGIRequest) -> HttpResponse:
     """Endpoint for health check"""
     return HttpResponse(True)
 
-
 @require_http_methods(['GET'])
 @decorators.auth_required
 @decorators.log_method
@@ -32,6 +31,9 @@ def todo_list_page(request: WSGIRequest) -> HttpResponse:
     return render(request, config.TODO_LISTS_PAGE,
                   context={'msg': msg, 'todos': todos})
 
+@require_http_methods(['GET'])
+@decorators.auth_required
+@decorators.log_method
 def tasks_page(request: WSGIRequest, todo_list_id: str) -> HttpResponse:
     msg = f'Logged in as {request.session["user"]["email"]}'
     tasks = db_op.get_tasks_of_todo_list(todo_list_id)
@@ -49,7 +51,7 @@ def create_todo_list(request: WSGIRequest) -> ty.Any:
         )
     except ce.InvalidRequestParamsError as err:
         logger.log.error('Error: %s', str(err))
-        return render(request, config.HOME_PAGE, context={'err': str(err)})
+        return render(request, config.TODO_LISTS_PAGE, context={'err': str(err)})
 
     list_name = request.POST.get('ListName')
     user_id = request.session.get('user')['id']
@@ -59,7 +61,7 @@ def create_todo_list(request: WSGIRequest) -> ty.Any:
     except ce.UnexpectedLengthError as err:
         logger.log.error('Error: %s', str(err), exc_info=False)
         logger.log.debug('Error: %s', str(err), exc_info=True)
-        return render(request, config.HOME_PAGE, context={'err': str(err)})
+        return render(request, config.TODO_LISTS_PAGE, context={'err': str(err)})
 
     db_op.create_new_todo_list(user_id, list_name)
 
@@ -77,7 +79,7 @@ def update_todo_list(request: WSGIRequest) -> ty.Any:
         )
     except ce.InvalidRequestParamsError as err:
         logger.log.error('Error: %s', str(err))
-        return render(request, config.HOME_PAGE, context={'err': str(err)})
+        return render(request, config.TODO_LISTS_PAGE, context={'err': str(err)})
 
     new_name = request.POST.get('NewName')
     todo_list_id = request.POST.get('ToDoListID')
@@ -94,7 +96,7 @@ def delete_todo_list(request: WSGIRequest) -> ty.Any:
         validator.check_required_params(params=request.POST, required=['ToDoListID'])
     except ce.InvalidRequestParamsError as err:
         logger.log.error('Error: %s', str(err))
-        return render(request, config.HOME_PAGE, context={'err': str(err)})
+        return render(request, config.TODO_LISTS_PAGE, context={'err': str(err)})
 
     todo_list_id = request.POST.get('ToDoListID')
     db_op.delete_todo_list_object(todo_list_id)
@@ -148,7 +150,7 @@ def update_task(request: WSGIRequest) -> ty.Any:
         )
     except ce.InvalidRequestParamsError as err:
         logger.log.error('Error: %s', str(err))
-        return render(request, config.HOME_PAGE, context={'err': str(err)})
+        return render(request, config.TODO_LISTS_PAGE, context={'err': str(err)})
 
     new_task_val = request.POST.get('NewTaskValue')
     todo_list_id = request.POST.get('ToDoListID')
@@ -167,7 +169,7 @@ def delete_task(request: WSGIRequest) -> ty.Any:
         )
     except ce.InvalidRequestParamsError as err:
         logger.log.error('Error: %s', str(err))
-        return render(request, config.HOME_PAGE, context={'err': str(err)})
+        return render(request, config.TODO_LISTS_PAGE, context={'err': str(err)})
 
     todo_list_id = request.POST.get('ToDoListID')
     task_id = request.POST.get('TaskID')
@@ -186,7 +188,7 @@ def toggle_task_status(request: WSGIRequest) -> ty.Any:
         )
     except ce.InvalidRequestParamsError as err:
         logger.log.error('Error: %s', str(err))
-        return render(request, config.HOME_PAGE, context={'err': str(err)})
+        return render(request, config.TODO_LISTS_PAGE, context={'err': str(err)})
 
     todo_list_id = request.POST.get('ToDoListID')
     task_id = request.POST.get('TaskID')
