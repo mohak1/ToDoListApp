@@ -30,7 +30,7 @@ class TodoListPageTestCase(TestCase):
         self.client.post(config.LOGIN_REDIRECT_URL, data=data)
         data = {'ListName': 'list1'}
         self.client.post('/todos/create_todo_list', data=data)
-        response = self.client.get(config.TASKS_REDIRECT_URL+'/0')
+        response = self.client.get(config.TASKS_REDIRECT_URL+'/1')
         self.assertTemplateUsed(response, config.TASKS_PAGE)
 
     def test_tasks_page_without_authentication(self):

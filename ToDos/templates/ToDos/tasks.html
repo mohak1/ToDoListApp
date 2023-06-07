@@ -17,10 +17,9 @@
         </div>
     </h4>
 
-    {% if list_name %}
-        <h1 style="text-align: center;">{{ list_name }}</h1>
-        <h1 style="text-align: center;">{{ list_id }}</h1>
-    {% endif %}
+
+        <h1 style="text-align: center;">ToDo List: {{ todo_list_name }}</h1>
+
     <br>
     <form method="POST" action="/todos/create_task">
         <label for="ListName">Add new task to this ToDo List:</label>
