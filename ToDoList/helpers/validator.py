@@ -6,8 +6,10 @@ from django.http.request import QueryDict
 
 from ToDoList import config
 from ToDoList.helpers import custom_exceptions as ce
+from ToDoList.helpers import decorators
 
 
+@decorators.log_method
 def check_signup_params_length(params: QueryDict) -> None:
     """
     Ensures that the length of FirstName, LastName, Email and Password
@@ -19,6 +21,7 @@ def check_signup_params_length(params: QueryDict) -> None:
     check_email_length(params.get('Email'))
     check_password_length(params.get('Password'))
 
+@decorators.log_method
 def check_name_length(name: str) -> None:
     """
     Verifies that name length is greater than 0 and less than
@@ -33,6 +36,7 @@ def check_name_length(name: str) -> None:
             f'`{config.MAX_NAME_LENGTH}` characters'
         )
 
+@decorators.log_method
 def check_email_length(email: str) -> None:
     """
     Verifies that email length is greater than 0 and less than
@@ -47,6 +51,7 @@ def check_email_length(email: str) -> None:
             f'`{config.MAX_EMAIL_LENGTH}` characters'
         )
 
+@decorators.log_method
 def check_todo_list_name_length(name: str) -> None:
     """
     Verifies that the name length of ToDo List is longer than 0 and less
@@ -61,6 +66,7 @@ def check_todo_list_name_length(name: str) -> None:
             f'`{config.MAX_LIST_NAME_LENGTH}` characters'
         )
 
+@decorators.log_method
 def check_password_length(passw: str) -> None:
     """
     Verifies that password length is greater than 0 and less than
@@ -75,6 +81,7 @@ def check_password_length(passw: str) -> None:
             f'`{config.MAX_PASSWORD_LENGTH}` characters'
         )
 
+@decorators.log_method
 def check_required_params(params: QueryDict, required: ty.List) -> None:
     """
     Verifies that items in `required` are present in `params`
