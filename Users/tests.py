@@ -8,8 +8,7 @@ class LoginTestCase(TestCase):
         self.client = Client()
 
     def test_get(self):
-        url = '/users/login'
-        response = self.client.get(url)
+        response = self.client.get(config.LOGIN_REDIRECT_URL)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'Users/login.html')
 
