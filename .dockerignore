@@ -5,3 +5,5 @@
 .vscode
 .pylintrc
 db.sqlite3
+/images_for_readme/
+*.png
