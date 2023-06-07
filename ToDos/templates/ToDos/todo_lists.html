@@ -41,7 +41,7 @@
             <tr>
                 <form method="POST" action="/todos/update_todo_list">
                     <td>
-                        <input type="text" name="NewName" value={{ ele.list_name }}>
+                        <input type="text" name="NewName" value="{{ ele.list_name }}">
                         <input type="text" name="ToDoListID" type="hidden" style="display:none;" value={{ ele.id }}>
                     </td>
                     <td>

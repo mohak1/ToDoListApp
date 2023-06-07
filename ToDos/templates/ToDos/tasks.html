@@ -47,9 +47,9 @@
                 <form method="POST" action="/todos/update_task">
                     <td>
                         {% if task.completed %}
-                            <input type="text" disabled name="NewTaskValue" value= {{ task.task_value }}>
+                            <input type="text" disabled name="NewTaskValue" value="{{ task.task_value }}">
                         {% else %}
-                            <input type="text" name="NewTaskValue" value={{ task.task_value }}>
+                            <input type="text" name="NewTaskValue" value="{{ task.task_value }}">
                         {% endif %}
                         
 
