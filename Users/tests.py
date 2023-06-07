@@ -8,8 +8,7 @@ class LoginTestCase(TestCase):
         self.client = Client()
 
     def test_get(self):
-        url = '/users/login'
-        response = self.client.get(url)
+        response = self.client.get(config.LOGIN_REDIRECT_URL)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'Users/login.html')
 
@@ -26,8 +25,8 @@ class LoginTestCase(TestCase):
     def test_post_with_correct_credentials(self):
         # create a test account
         data = {
-            'First Name': 'fname', 'Last Name': 'lname', 'Email': 'email',
-            'Password': 'password', 'Confirm Password': 'password'
+            'FirstName': 'fname', 'LastName': 'lname', 'Email': 'email',
+            'Password': 'password', 'ConfirmPassword': 'password'
         }
         response = self.client.post(config.SIGNUP_REDIRECT_URL, data=data)
         data = {'Email': 'email', 'Password': 'password'}
@@ -46,8 +45,8 @@ class SignupTestCase(TestCase):
 
     def test_post_with_valid_data(self):
         data = {
-            'First Name': 'fname', 'Last Name': 'lname', 'Email': 'email',
-            'Password': 'password', 'Confirm Password': 'password'
+            'FirstName': 'fname', 'LastName': 'lname', 'Email': 'email',
+            'Password': 'password', 'ConfirmPassword': 'password'
         }
         response = self.client.post(config.SIGNUP_REDIRECT_URL, data=data)
         # verify that email and password exist in db
@@ -57,23 +56,23 @@ class SignupTestCase(TestCase):
 
     def test_post_with_missing_params(self):
         data = {
-            'First Name': 'fname', 'Email': 'email', 'Password': 'password',
+            'FirstName': 'fname', 'Email': 'email', 'Password': 'password',
         }
         response = self.client.post(config.SIGNUP_REDIRECT_URL, data=data)
         self.assertTemplateUsed(response, config.SIGNUP_PAGE)
 
     def test_post_with_password_mismatch(self):
         data = {
-            'First Name': 'fname', 'Last Name': 'lname', 'Email': 'email',
-            'Password': 'value1', 'Confirm Password': 'value2'
+            'FirstName': 'fname', 'LastName': 'lname', 'Email': 'email',
+            'Password': 'value1', 'ConfirmPassword': 'value2'
         }
         response = self.client.post(config.SIGNUP_REDIRECT_URL, data=data)
         self.assertTemplateUsed(response, config.SIGNUP_PAGE)
 
     def test_post_when_email_already_exists(self):
         data = {
-            'First Name': 'fname', 'Last Name': 'lname', 'Email': 'email',
-            'Password': 'password', 'Confirm Password': 'password'
+            'FirstName': 'fname', 'LastName': 'lname', 'Email': 'email',
+            'Password': 'password', 'ConfirmPassword': 'password'
         }
         response = self.client.post(config.SIGNUP_REDIRECT_URL, data=data)
         response = self.client.post(config.SIGNUP_REDIRECT_URL, data=data)

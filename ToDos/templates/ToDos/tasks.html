@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasks</title>
+</head>
+<body>
+    <h4>
+        <div class='navbar'>
+            <a href='/todos/todo_lists'>ToDo Lists</a> |
+            {% if msg %}
+                {{ msg }} 
+            {% endif %}
+            <a href='/users/logout'>(Logout?)</a> 
+        </div>
+    </h4>
+
+    {% if list_name %}
+        <h1 style="text-align: center;">{{ list_name }}</h1>
+        <h1 style="text-align: center;">{{ list_id }}</h1>
+    {% endif %}
+    <br>
+    <form method="POST" action="/todos/create_task">
+        <label for="ListName">Add new task to this ToDo List:</label>
+        <input type="text" name="ToDoListID" type="hidden" style="display:none;" value={{ list_id }}>
+        <input type="text" name="TaskValue">
+        {% csrf_token %} {{form.as_p}}
+        <input class="button" type="submit" value="Add" />
+    </form>
+    <h4>
+        {% if err %}
+            {{ err }}
+        {% endif %}
+    </h4>
+    <br>
+    <h3>Tasks:</h3>
+    <table>
+        <tr>
+            <th>Task</th>
+            <th>Update Task</th>
+            <th>Delete Task</th>
+            <th>Action</th>
+        </tr>
+        {% for task in tasks %}
+            <tr>
+                <form method="POST" action="/todos/update_task">
+                    <td>
+                        {% if task.completed %}
+                            <input type="text" disabled name="NewTaskValue" value= {{ task.task_value }}>
+                        {% else %}
+                            <input type="text" name="NewTaskValue" value={{ task.task_value }}>
+                        {% endif %}
+                        
+
+                        <input type="text" name="ToDoListID" type="hidden" style="display:none;" value={{ task.todo_list.id }}>
+                        <input type="text" name="TaskID" type="hidden" style="display:none;" value={{ task.id }}>
+                    </td>
+                    <td>
+                        {% csrf_token %} {{form.as_p}}
+                        <input class="button" type="submit" value="Update Task" />
+                    </td>
+                </form>
+                <td>
+                    <form method="POST" action="/todos/delete_task">
+                        <input type="text" name="ToDoListID" type="hidden" style="display:none;" value={{ task.todo_list.id }}>
+                        <input type="text" name="TaskID" type="hidden" style="display:none;" value={{ task.id }}>
+                        {% csrf_token %} {{form.as_p}}
+                        <input class="button" type="submit" value="Delete Task" />
+                    </form>
+                </td>
+                <td>
+                    <form method="POST" action="/todos/toggle_task_status">
+                        <input type="text" name="ToDoListID" type="hidden" style="display:none;" value={{ task.todo_list.id }}>
+                        <input type="text" name="TaskID" type="hidden" style="display:none;" value={{ task.id }}>
+                        {% csrf_token %} {{form.as_p}}
+                        
+                        {% if task.completed %}
+                            <input class="button" type="submit" value="Mark as Not Completed" />
+                        {% else %}
+                            <input class="button" type="submit" value="Mark as Completed" />
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

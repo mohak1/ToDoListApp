@@ -10,12 +10,12 @@ from ToDoList.helpers import custom_exceptions as ce
 
 def check_signup_params_length(params: QueryDict) -> None:
     """
-    Ensures that the length of First Name, Last Name, Email and Password
+    Ensures that the length of FirstName, LastName, Email and Password
     is greater than 0 and less than maximum allowed length
     Raises `ce.UnexpectedLengthError` if length is out of expected range
     """
-    check_name_length(params.get('First Name'))
-    check_name_length(params.get('Last Name'))
+    check_name_length(params.get('FirstName'))
+    check_name_length(params.get('LastName'))
     check_email_length(params.get('Email'))
     check_password_length(params.get('Password'))
 
@@ -45,6 +45,20 @@ def check_email_length(email: str) -> None:
         raise ce.UnexpectedLengthError(
             'Email length should be less than '
             f'`{config.MAX_EMAIL_LENGTH}` characters'
+        )
+
+def check_todo_list_name_length(name: str) -> None:
+    """
+    Verifies that the name length of ToDo List is longer than 0 and less
+    than maximum allowed length
+    Raises `ce.UnexpectedLengthError` if length is out of expected range
+    """
+    if len(name) < 1:
+        raise ce.UnexpectedLengthError('ToDo ListName cannot be empty')
+    if len(name) > config.MAX_LIST_NAME_LENGTH:
+        raise ce.UnexpectedLengthError(
+            'ToDo ListName length should be less than '
+            f'`{config.MAX_LIST_NAME_LENGTH}` characters'
         )
 
 def check_password_length(passw: str) -> None:

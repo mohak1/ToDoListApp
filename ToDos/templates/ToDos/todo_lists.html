@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo Lists</title>
+</head>
+<body>
+    <h4>
+        <div class='navbar'>
+            {% if msg %}
+                {{ msg }} 
+            {% endif %}
+            <a href='/users/logout'>(Logout?)</a>
+        </div>
+    </h4>
+    <h1 style="text-align: center;">Welcome to ToDo List App</h1>
+    <br>
+    <form method="POST" action="/todos/create_todo_list">
+        <label for="ListName">Create new list:</label>
+        <input type="text" name="ListName">
+        {% csrf_token %} {{form.as_p}}
+        <input class="button" type="submit" value="Create" />
+    </form>
+    <h4>
+        {% if err %}
+            {{ err }}
+        {% endif %}
+    </h4>
+    <br>
+    <h3>Your ToDo Lists:</h3>
+    <table>
+        <tr>
+            <th>List Name</th>
+            <th>Update List Name</th>
+            <th>Delete List</th>
+            <th>View Tasks</th>
+        </tr>
+        {% for ele in todos %}
+            <tr>
+                <form method="POST" action="/todos/update_todo_list">
+                    <td>
+                        <input type="text" name="NewName" value={{ ele.list_name }}>
+                        <input type="text" name="ToDoListID" type="hidden" style="display:none;" value={{ ele.id }}>
+                    </td>
+                    <td>
+                        {% csrf_token %} {{form.as_p}}
+                        <input class="button" type="submit" value="Update List Name" />
+                    </td>
+                </form>
+                <td>
+                    <form method="POST" action="/todos/delete_todo_list">
+                        <input type="text" name="ToDoListID" type="hidden" style="display:none;" value={{ ele.id }}>
+                        {% csrf_token %} {{form.as_p}}
+                        <input class="button" type="submit" value="Delete List" />
+                    </form>
+                </td>
+                <td>
+                    <form method="GET" action="/todos/tasks/{{ ele.id }}">
+                        {% csrf_token %} {{form.as_p}}
+                        <input class="button" type="submit" value="View Tasks" />
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

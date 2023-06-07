@@ -13,27 +13,27 @@
         <form method="POST" action="">
             <div>
                 <label for="First Name">First Name:</label>
-                <input type="text" id="First Name" name="First Name">
+                <input type="text" name="FirstName">
             </div>
             <br/>
             <div>
                 <label for="Last Name">Last Name:</label>
-                <input type="text" id="Last Name" name="Last Name">
+                <input type="text" name="LastName">
             </div>
             <br/>
             <div>
                 <label for="email">Email:</label>
-                <input type="text" id="Email" name="Email">
+                <input type="text" name="Email">
             </div>
             <br/>
             <div>
                   <label for="password">Password:</label>
-                  <input type="password" id="Password" name="Password">
+                  <input type="password" name="Password">
             </div>
             <br/>
             <div>
                 <label for="Confirm Password">Confirm Password:</label>
-                <input type="password" id="Confirm Password" name="Confirm Password">
+                <input type="password" name="ConfirmPassword">
             </div>
             <br/>
             {% csrf_token %} {{form.as_p}}
