@@ -37,10 +37,12 @@ def todo_list_page(request: WSGIRequest) -> HttpResponse:
 @decorators.log_method
 def tasks_page(request: WSGIRequest, todo_list_id: str) -> HttpResponse:
     msg = f'Logged in as {request.session["user"]["email"]}'
+    todo_list_name = db_op.get_todo_list_name(todo_list_id)
     tasks = db_op.get_tasks_of_todo_list(todo_list_id)
     return render(
         request, config.TASKS_PAGE, context={
-            'msg': msg, 'list_id': todo_list_id, 'tasks': tasks
+            'msg': msg, 'list_id': todo_list_id, 'tasks': tasks,
+            'todo_list_name': todo_list_name
         }
     )
 
@@ -93,14 +95,12 @@ def delete_todo_list(request: WSGIRequest) -> ty.Any:
 @decorators.log_method
 def get_tasks(request: WSGIRequest, todo_list_id: str) -> ty.Any:
     """Returns all the Tasks of the specified ToDo List"""
-    list_name = 'Name Of The List'
     tasks = db_op.get_tasks_of_todo_list(todo_list_id)
     msg = f'Logged in as {request.session["user"]["email"]}'
     return render(
         request, config.TASKS_PAGE, context={
-            'msg': msg, 'list_name': list_name,
-            'tasks': tasks, 'list_id': todo_list_id
-        }
+            'msg': msg, 'tasks': tasks, 'list_id': todo_list_id
+            }
     )
 
 
