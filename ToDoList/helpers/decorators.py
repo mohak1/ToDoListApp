@@ -1,6 +1,8 @@
 """This file contains decorators for logging and auth"""
 
 import functools
+
+from django.http import HttpResponseBadRequest
 from ToDoList import config
 from ToDoList.helpers import custom_exceptions as ce
 from ToDoList.helpers import logger
@@ -37,3 +39,31 @@ def auth_required(func):
         result = func(request, *args, **kwargs)
         return result
     return wrapper
+
+def params_required(required_param_dict):
+    """
+    This decorator checks if the incoming request has the params
+    necessary for the processing. This check is done by checking if
+    the required parameters are a subset of the parameters in the
+    incomming request. 
+    Returns a status code 400 response if params are missing
+    """
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(request, *args, **kwargs):
+            for key in required_param_dict:
+                if key.upper() == 'GET':
+                    request_params = set(request.GET.keys())
+                    required_params = set(required_param_dict['POST'])
+                    if not required_params.issubset(request_params):
+                        response = HttpResponseBadRequest()
+                        return response
+                if key.upper() == 'POST':
+                    request_params = set(request.POST.keys())
+                    required_params = set(required_param_dict['POST'])
+                    if not required_params.issubset(request_params):
+                        response = HttpResponseBadRequest()
+                        return response
+            return func(request, *args, **kwargs)
+        return wrapper
+    return decorator
